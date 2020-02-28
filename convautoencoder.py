@@ -1,4 +1,4 @@
-git # import the necessary packages
+# import the necessary packages
 from tensorflow.keras.layers import BatchNormalization
 from tensorflow.keras.layers import Conv2D
 from tensorflow.keras.layers import Conv2DTranspose
