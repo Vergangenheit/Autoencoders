@@ -5,8 +5,7 @@ matplotlib.use("Agg")
 
 # import the necessary packages
 from convautoencoder import ConvAutoencoder
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.datasets import mnist
+import tensorflow
 import matplotlib.pyplot as plt
 import numpy as np
 import argparse
@@ -20,7 +19,7 @@ def train(args):
 
     # load the MNIST dataset
     print("[INFO] loading MNIST dataset...")
-    ((trainX, _), (testX, _)) = mnist.load_data()
+    ((trainX, _), (testX, _)) = tensorflow.keras.datasets.mnist.load_data()
 
     # add a channel dimension to every image in the dataset, then scale
     # the pixel intensities to the range [0, 1]
@@ -32,7 +31,7 @@ def train(args):
     # construct our convolutional autoencoder
     print("[INFO] building autoencoder...")
     (encoder, decoder, autoencoder) = ConvAutoencoder.build(28, 28, 1)
-    opt = Adam(lr=1e-3)
+    opt = tensorflow.keras.optimizers.Adam(lr=1e-3)
     autoencoder.compile(loss="mse", optimizer=opt)
 
     # train the convolutional autoencoder
@@ -46,6 +45,7 @@ def train(args):
 
 def plot(args, H: tensorflow.keras.callbacks.History):
     # construct a plot that plots and saves the training history
+    EPOCHS = 25
     N = np.arange(0, EPOCHS)
     plt.style.use("ggplot")
     plt.figure()
@@ -57,7 +57,8 @@ def plot(args, H: tensorflow.keras.callbacks.History):
     plt.legend(loc="lower left")
     plt.savefig(args["plot"])
 
-def predict(autoencoder:tensorflow.keras.Model):
+
+def predict(autoencoder: tensorflow.keras.Model):
     # use the convolutional autoencoder to make predictions on the
     # testing images, then initialize our list of output images
     print("[INFO] making predictions...")
@@ -99,3 +100,6 @@ def main():
     plot(args)
     predict(autoencoder)
 
+
+if __name__ == "__main__":
+    main()
